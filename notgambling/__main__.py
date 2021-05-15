@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 
-from smallgames import SimpleGames
+from notgambling.smallgames import SimpleGames
 
 
 class SemidbmShelf(shelve.Shelf):
