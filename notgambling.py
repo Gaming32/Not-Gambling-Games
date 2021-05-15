@@ -2,11 +2,11 @@ import os
 import logging
 import shelve
 
-import aiohttp
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-import requests
+
+from smallgames import SimpleGames
 
 
 class SemidbmShelf(shelve.Shelf):
@@ -41,7 +41,8 @@ database = SemidbmShelf('games', writeback=True)
 
 
 @bot.command(
-    name = 'stats'
+    name = 'stats',
+    brief = 'Display stats about this bot'
 )
 async def stats(ctx: commands.Context):
     embed=discord.Embed(title='Not Gambling Stats', color=discord.Color.green())
@@ -49,15 +50,6 @@ async def stats(ctx: commands.Context):
     embed.add_field(name='Active games', value=len(database.dict.keys()), inline=False)
     embed.add_field(name='Guild ID', value=ctx.guild.id, inline=False)
     await ctx.send(embed=embed)
-
-
-@bot.command(
-    name = 'joke'
-)
-async def joke(ctx: commands.Context):
-    async with aiohttp.ClientSession() as session:
-        async with session.get('https://icanhazdadjoke.com/', headers={'Accept': 'text/plain'}) as r:
-            await ctx.send(await r.text())
 
 
 async def is_owner(ctx: commands.Context):
@@ -99,4 +91,5 @@ async def on_disconnect():
     database.dict.compact()
 
 
+bot.add_cog(SimpleGames(bot))
 bot.run(TOKEN)
